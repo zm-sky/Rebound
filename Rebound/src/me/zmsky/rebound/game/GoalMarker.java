@@ -83,12 +83,12 @@ public class GoalMarker extends Entity{
 		//Depending what type of marker we'll be generating, we'll be flipping the marker image to match
 		//sides.
 		if(markerType == GoalMarkerType.LEFT_MARKER){
-			markerX = board.getPosition().x + board.getPadding().x;
-			markerY = board.getPosition().y + board.getPadding().y;
+			markerX = board.position.x + board.getPadding().x;
+			markerY = board.position.y + board.getPadding().y;
 		}
 		else if(markerType == GoalMarkerType.RIGHT_MARKER){
-			markerX = board.getPosition().x + board.getSize().x - board.getPadding().x - Marker.getWidth();
-			markerY = board.getPosition().y + board.getPadding().y;
+			markerX = board.position.x + board.getSize().x - board.getPadding().x - Marker.getWidth();
+			markerY = board.position.y + board.getPadding().y;
 			
 			Marker = ImageCenter.FlipImageHorizontally(Marker);
 		}

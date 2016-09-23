@@ -7,11 +7,16 @@ import java.util.List;
 import me.zmsky.rebound.component.Component;
 import me.zmsky.rebound.math.Vector2;
 
-public abstract class Entity {
+public abstract class Entity{
 	/**
-	 * Determines the position on the screen of this entity.
+	 * The position on the screen of this entity.
 	 */
 	public Vector2 position = new Vector2(0,0);
+	
+	/**
+	 * The last known position on the screen of this entity.
+	 */
+	public Vector2 lastPosition = new Vector2(0,0);
 	
 	/**
 	 * The list of components this entity has.
@@ -24,10 +29,10 @@ public abstract class Entity {
 	 * @param g The current graphical context.
 	 */
 	public final void draw(Graphics2D g){
+		drawEntity(g);
+		
 		for(Component c : components)
 			c.draw(g);
-		
-		drawEntity(g);
 	}
 	
 	/**
@@ -48,6 +53,14 @@ public abstract class Entity {
 	 */
 	public void addComponent(Component component){
 		components.add(component);
+	}
+	
+	public Component getComponent(Class<?> clazz){
+		for(Component component : components)
+			if(component.getClass().getName().equals(clazz.getName()))
+				return component;
+		
+		return null;
 	}
 	
 	/**

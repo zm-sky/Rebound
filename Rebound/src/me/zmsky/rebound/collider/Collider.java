@@ -11,13 +11,13 @@ public abstract class Collider extends Component{
 	 * Determines the size of this box collider. Any other collider that is inside
 	 * these bounds will make any collision call return true.
 	 */
-	protected Vector2 colliderSize;
+	public Vector2 colliderSize;
 	
 	/**
 	 * Determines the position of this box collider. It is usually fixed to an entity, 
 	 * if it has one attached to it.
 	 */
-	protected Vector2 position;
+	public Vector2 position;
 	
 	/**
 	 * The list of collision listeners we will be calling whenever a collision occurs.
@@ -28,7 +28,7 @@ public abstract class Collider extends Component{
 	 * The parent of this collider. This can be null. We can use this to determine
 	 * who this collider belongs to, incase it is needed to know.
 	 */
-	protected Entity parent;
+	public Entity parent;
 	
 	/**
 	 * A flag that indicates if Continuous Collision Detection is activated.
@@ -37,13 +37,34 @@ public abstract class Collider extends Component{
 	 */
 	protected boolean isCCDActivated;
 	
+	public Collider(){
+		CollisionManager manager = CollisionManager.getInstance();
+		manager.registerCollider(this);
+	}
+	
+	/**
+	 * Notifies all listeners that a collision has occured.
+	 * @param c
+	 */
+	public final void notifyListeners(Collider c){
+		//We're putting this in a synchronized block in case someone adds a listener
+		//while we're notifying listeners.
+		synchronized(listeners){
+			for(CollisionListener l : listeners){
+				l.onCollision(c);
+			}
+		}
+	}
+	
 	/**
 	 * Adds a new listener to the list of collision listeners.
 	 * 
 	 * @param listener The new listener to be added.
 	 */
 	public final void addListener(CollisionListener listener){
-		listeners.add(listener);
+		synchronized(listeners){
+			listeners.add(listener);
+		}
 	}
 	
 	/**
@@ -52,7 +73,9 @@ public abstract class Collider extends Component{
 	 * @param listener The listener to be removed.
 	 */
 	public final void removeListener(CollisionListener listener){
-		listeners.remove(listener);
+		synchronized(listeners){
+			listeners.remove(listener);
+		}
 	}
 	
 	/**

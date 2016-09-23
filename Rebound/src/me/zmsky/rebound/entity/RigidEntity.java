@@ -1,5 +1,6 @@
 package me.zmsky.rebound.entity;
 
+import me.zmsky.rebound.collider.Collider;
 import me.zmsky.rebound.math.Vector2;
 
 public abstract class RigidEntity extends Entity{
@@ -14,27 +15,39 @@ public abstract class RigidEntity extends Entity{
 	
 	private float c = 0.05f;
 	private float normal = 1f;
-	protected float frictionMag = c*normal;
+	public float frictionMag = c*normal;
 	
 	/**
 	 * Updates this rigid entity to enable movement.
+	 * If a collider is attatched to this Entity, we will be checking for collisions here.
+	 * This is because very fast moving objects need to be checked in a special kind of way
+	 * to avoid tunneling.
 	 * 
 	 * @param delta The delta time between frames.
 	 */
-	public void updateEntity(double delta) {		
-		friction = new Vector2(velocity.x, velocity.y);
-		friction.mult(-1 * frictionMag);
+	public void updateEntity(double delta) {
+		Collider collider = (Collider) getComponent(Collider.class);
 		
-		applyForce(friction);
-		velocity.add(Vector2.mult(acceleration, (float) delta));
-		
-		if(limitMax != null)
-			velocity.limitMax(limitMax);
-		if(limitMin != null)
-			velocity.limitMin(limitMin);
-		
-		position.add(velocity);
-		acceleration.mult(0);
+		if(collider != null){
+			
+		}
+		else{
+			lastPosition = new Vector2(position);
+			
+			friction = new Vector2(velocity.x, velocity.y);
+			friction.mult(-1 * frictionMag);
+			
+			applyForce(friction);
+			velocity.add(Vector2.mult(acceleration, (float) delta));
+			
+			if(limitMax != null)
+				velocity.limitMax(limitMax);
+			if(limitMin != null)
+				velocity.limitMin(limitMin);
+			
+			position.add(velocity);
+			acceleration.mult(0);
+		}
 	}
 	/**
 	 * Sets the friction of this rigid entity.

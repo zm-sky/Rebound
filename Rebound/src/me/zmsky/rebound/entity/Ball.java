@@ -25,9 +25,16 @@ public class Ball extends RigidEntity{
 		position = initPosition;
 		size = ballSize;
 		
+		//Since the ball can move pretty fast, it could tunnel through other colliders.
+		//We are going to be continuously checking for collision on this collider.
 		collider = new BoxCollider(this, ballSize);
+		collider.setCDDEnabled(true);
+		
+		//Setting physics properties for the ball.
+		//We dont want friction to affect it.
 		setFriction(0);
-		acceleration = new Vector2(10, 0);
+		acceleration = new Vector2(1, 0);
+		
 		//We are adding this to the component array so if an outsider wants to know if
 		//this class has a certain component, we can manage it by calling the list of active components
 		//in the super class.
@@ -40,7 +47,7 @@ public class Ball extends RigidEntity{
 		
 		//Ball logic goes here.
 	}
-	protected void drawEntity(Graphics2D g) {
+	public void drawEntity(Graphics2D g) {
 		g.setColor(Color.RED);
 		g.fillRect((int) position.x, (int) position.y, (int) size.x, (int) size.y);
 	}
