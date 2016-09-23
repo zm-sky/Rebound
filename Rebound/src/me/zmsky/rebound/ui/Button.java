@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import me.zmsky.core.GameBox;
+import me.zmsky.rebound.sound.SoundEffect;
 
 /**
  * 
@@ -138,7 +139,10 @@ public class Button extends GUI{
     	
     	isHoveredOn = false;
     }
-    
+    public void onMouseClick(int button, int x, int y) {  
+    	if(isHoveredOn)
+    		SoundEffect.UI_SELECT.play();
+    }
 	/**
 	 * Updates the button.
 	 */
@@ -148,6 +152,5 @@ public class Button extends GUI{
     	else
     		opacity = opacity > 0.5f ? opacity - 0.02f : 0.5f;
     }
-    public void onMouseClick(int button, int x, int y) {  }
     public void setShiftLeftMode(boolean value){ shiftTextLeft = value; }
 }

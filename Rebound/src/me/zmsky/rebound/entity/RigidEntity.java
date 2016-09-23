@@ -1,15 +1,11 @@
 package me.zmsky.rebound.entity;
 
-import java.awt.Graphics2D;
-
 import me.zmsky.rebound.math.Vector2;
 
-
-public class RigidEntity implements Entity{
-
+public abstract class RigidEntity extends Entity{
+	
 	public Vector2 acceleration = new Vector2(0,0);
 	public Vector2 velocity = new Vector2(0,0);
-	public Vector2 position = new Vector2(0,0);
 	public Vector2 size = new Vector2(0,0);
 	public Vector2 friction = new Vector2(0,0);
 	
@@ -25,13 +21,12 @@ public class RigidEntity implements Entity{
 	 * 
 	 * @param delta The delta time between frames.
 	 */
-	public void update(double delta) {		
+	public void updateEntity(double delta) {		
 		friction = new Vector2(velocity.x, velocity.y);
 		friction.mult(-1 * frictionMag);
 		
 		applyForce(friction);
-		
-		velocity.add(acceleration);
+		velocity.add(Vector2.mult(acceleration, (float) delta));
 		
 		if(limitMax != null)
 			velocity.limitMax(limitMax);
@@ -39,9 +34,7 @@ public class RigidEntity implements Entity{
 			velocity.limitMin(limitMin);
 		
 		position.add(velocity);
-		//acceleration.mult(0);
-		
-		entityUpdate(delta);
+		acceleration.mult(0);
 	}
 	/**
 	 * Sets the friction of this rigid entity.
@@ -49,14 +42,7 @@ public class RigidEntity implements Entity{
 	 * @param frictionMag The desired friction to set to.
 	 */
 	public void setFriction(float frictionMag){ this.frictionMag = frictionMag; }
-	/**
-	 * Called by the update() method, this should be used whenever
-	 * one wants to have a custom update without overriding the default
-	 * update method that keeps in charge of movement.
-	 * 
-	 * @param delta The delta time between frames.
-	 */
-	public void entityUpdate(double delta){}
+	
 	/**
 	 * Sets the max limit of the velocity.
 	 * @param limitMax The desired max.
@@ -70,6 +56,5 @@ public class RigidEntity implements Entity{
 	/**
 	 * Returns the entity tag of this instance.
 	 */
-	public EntityTag getEntityTag() { return EntityTag.UNDEFINED; }
-	public void draw(Graphics2D g) {}
+	public EntityTag getEntityTag() { return EntityTag.ENTITY; }
 }

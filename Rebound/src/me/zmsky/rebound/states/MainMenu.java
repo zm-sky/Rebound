@@ -10,9 +10,17 @@ import me.zmsky.core.states.GameState;
 import me.zmsky.rebound.game.Game;
 import me.zmsky.rebound.ui.Button;
 import me.zmsky.rebound.ui.UIManager;
+import me.zmsky.resources.ImageCenter;
 
 public class MainMenu implements GameState{
+	/**
+	 * UIManager that will keep in charge of UI events.
+	 */
 	private UIManager manager;
+	/**
+	 * This game instance will be rendered in the background as a demo.
+	 * Just for esthetic purposes.
+	 */
 	private Game game;
 	
 	public MainMenu(){
@@ -28,14 +36,17 @@ public class MainMenu implements GameState{
 		manager.getUIElement("PlayButton").setBackgroundColor(new Color(72,61,139));
 		manager.getUIElement("PlayButton").setHighlightColor(new Color(72,61,139));
 	}
+	public void Render(Graphics2D g) { 
+		manager.renderUI(g); 
+		game.Render(g);
+	}
 	public void onMouseMove(int button, int x, int y, boolean Drag) { manager.onMouseMove(button, x, y, Drag); }
 	public void onMouseWheelMove(MouseWheelEvent e) {}
 	public void onKeyPressed(KeyEvent e) {  }
 	public void onKeyReleased(KeyEvent e) { }
-	public void onMouseClick(int button, int x, int y) {  }
+	public void onMouseClick(int button, int x, int y) { manager.onMouseClick(button, x, y); }
 	public void onMouseRelease(int button, int x, int y) { }
 	public void RenderGui(Graphics2D g) {}
-	public void Render(Graphics2D g) { manager.renderUI(g); game.Render(g); }
 	public void Update(double delta) { manager.update(); game.Update(delta); }
 	public void EnterState() {}
 	public void LeftState() {}

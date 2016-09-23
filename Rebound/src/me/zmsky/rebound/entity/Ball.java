@@ -1,50 +1,47 @@
 package me.zmsky.rebound.entity;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
+import me.zmsky.rebound.collider.BoxCollider;
 import me.zmsky.rebound.math.Vector2;
 
 public class Ball extends RigidEntity{
 	
 	/**
-	 * Empty constructor.
+	 * Our ball is going to be square, so we'll declare a box collider to detect collisions.
+	 * Collisions arent checked here however, the job can be done by a CollisionManager.
 	 */
-	public Ball(){
-		setFriction(0);
-	}
+	private BoxCollider collider;
 	
 	/**
-	 * Creates a ball instance with defined position and speed.
+	 * Creates a new ball at the desired position and size.
 	 * 
-	 * @param initPosition The initial position of the ball.
-	 * @param speed The initial speed of the ball.
-	 * @param size The size of the ball.
+	 * @param initPosition The initial position of this ball.
+	 * @param ballSize The size of this ball.
 	 */
-	public Ball(Vector2 initPosition, Vector2 speed, Vector2 defaultSize){
-		setFriction(0);
-		
+	public Ball(Vector2 initPosition, Vector2 ballSize){
+		initPosition = Vector2.sub(initPosition, Vector2.div(ballSize, 2));
 		position = initPosition;
-		acceleration = speed;
-		size = defaultSize;
-	}
-	
-	/**
-	 * Updates the ball. This method does not keep in charge
-	 * of movement. Update() should be called instead of this method,
-	 * as Update() automatically calls this method after it ends.
-	 * 
-	 * @param delta The delta value between frames.
-	 */
-	public void entityUpdate(double delta){
+		size = ballSize;
 		
+		collider = new BoxCollider(this, ballSize);
+		setFriction(0);
+		acceleration = new Vector2(10, 0);
+		//We are adding this to the component array so if an outsider wants to know if
+		//this class has a certain component, we can manage it by calling the list of active components
+		//in the super class.
+		addComponent(collider);
 	}
-	
-	/**
-	 * Draws the ball.
-	 * 
-	 * @param g The current graphical context to draw on.
-	 */
-	public void draw(Graphics2D g){
+	public void updateEntity(double delta) {
+		//We call the super class so all physics related things are updated, since
+		//we are overriding the method it uses to do this.
+		super.updateEntity(delta);
 		
+		//Ball logic goes here.
+	}
+	protected void drawEntity(Graphics2D g) {
+		g.setColor(Color.RED);
+		g.fillRect((int) position.x, (int) position.y, (int) size.x, (int) size.y);
 	}
 }
